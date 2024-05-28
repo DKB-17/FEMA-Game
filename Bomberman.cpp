@@ -1,7 +1,7 @@
 #include <iostream>
-#include <allegro.h>
-#include <allegro_image.h>
-#include <keyboard.h>
+#include <allegro5/allegro.h>
+#include <allegro5/allegro_image.h>
+#include <allegro5/keyboard.h>
 
 using namespace std;
 
