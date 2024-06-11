@@ -1,136 +1,45 @@
-/*
-#include <iostream>
-#include <allegro5/allegro.h>
-#include <allegro5/allegro_image.h>
-#include <allegro5/keyboard.h>
-
-using namespace std;
-
-ALLEGRO_DISPLAY* janela = NULL;
-ALLEGRO_EVENT_QUEUE* fEventos = NULL;
-ALLEGRO_EVENT ev;
-
-ALLEGRO_BITMAP* chao = al_load_bitmap("./bitmap/chao.png");
-ALLEGRO_BITMAP* parede = NULL;
-ALLEGRO_BITMAP* porta = NULL;
-ALLEGRO_BITMAP* centro_lousa = NULL;
-ALLEGRO_BITMAP* esquerda_lousa = NULL;
-ALLEGRO_BITMAP* direita_lousa = NULL;
-
-const int linha = 11;
-const int coluna = 15;
-int mapa[linha][coluna] = { {2,2,2,2,2,7,5,5,5,6,2,2,2,2,2},
-                                {2,0,0,1,1,0,1,1,0,0,1,1,0,0,3},
-                                {2,0,4,1,4,1,4,0,4,1,4,1,4,0,2},
-                                {2,1,0,1,1,0,1,0,1,1,0,1,1,1,2},
-                                {2,0,4,1,4,0,4,0,4,1,4,1,4,1,2},
-                                {2,1,0,1,0,1,1,1,0,1,0,1,0,1,2},
-                                {2,0,4,1,4,0,4,0,4,1,4,1,4,0,2},
-                                {2,1,1,1,1,1,1,1,1,1,0,1,1,1,2},
-                                {2,0,4,1,4,1,4,0,4,1,4,1,4,0,2},
-                                {2,0,0,1,1,0,1,0,1,1,0,1,0,0,2},
-                                {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2}
-};  // 0 - chao da sala
-// 1 - prova com nota 0
-// 2 - parede da sala
-// 3 - porta
-// 4 - mesa de aula
-// 5 - meio da lousa
-// 6 - canto direito da lousa
-// 7 - canto esquerdo da lousa
-// 8 - personagem
-// 9 - bomba
-// 10 - explosao
-
-void desenhaMapa() {
-
-}
-
-int main() {
-
-    al_init();
-    al_init_image_addon();
-    al_install_keyboard();
-
-
-    janela = al_create_display(32*11, 32*15);
-    al_set_window_position(janela, 100, 100);
-    al_set_window_title(janela, "BOMBERMAN");
-
-    const float FPS = 60;
-
-    ALLEGRO_TIMER* timer = al_create_timer(1 / FPS);
-
-    fEventos = al_create_event_queue();
-    al_register_event_source(fEventos, al_get_display_event_source(janela));
-    al_register_event_source(fEventos, al_get_timer_event_source(timer));
-    al_register_event_source(fEventos, al_get_keyboard_event_source());
-
-
-    al_start_timer(timer);
-    bool done = false;
-    while (!done) {
-        al_wait_for_event(fEventos, &ev);
-        al_draw_bitmap(chao,1*32,1*32,0);
-
-    }
-
-    return 0;
-}
-*/
 #include<allegro5/allegro5.h>
 #include<allegro5/allegro_primitives.h>
 #include<allegro5/allegro_image.h>
 
 #define BLOCKSIZE 32
 #define WMAPA 15
-#define HMAPA 11
+#define HMAPA 12
 #define SCREENWIDTH BLOCKSIZE*WMAPA
 #define SCREENHEIGHT BLOCKSIZE*HMAPA
 
 enum KEYS{UP, DOWN, LEFT, RIGHT};
 enum KEYS2{W, S, A, D};
 
-int mapa[HMAPA][WMAPA] = {  {4,3,3,3,3,3,3,3,3,3,3,3,3,3,4},
-                            {2,0,0,1,1,0,1,1,0,0,1,1,0,0,2},
-                            {2,0,4,1,4,1,4,0,4,1,4,1,4,0,2},
-                            {2,1,0,1,1,0,1,0,1,1,0,1,1,1,2},
-                            {2,0,4,1,4,0,4,0,4,1,4,1,4,1,2},
-                            {2,1,0,1,0,1,1,1,0,1,0,1,0,1,2},
-                            {2,0,4,1,4,0,4,0,4,1,4,1,4,0,2},
-                            {2,1,1,1,1,1,1,1,1,1,0,1,1,1,2},
-                            {2,0,4,1,4,1,4,0,4,1,4,1,4,0,2},
-                            {2,0,0,1,1,0,1,0,1,1,0,1,0,0,2},
-                            {4,3,3,3,3,3,3,3,3,3,3,3,3,3,4}};
-
-ALLEGRO_BITMAP *chao = NULL;
-ALLEGRO_BITMAP *parede = NULL;
-ALLEGRO_BITMAP *canto = NULL;
+int mapa[HMAPA][WMAPA] = {
+                     { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1},
+                     { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 2, 1},
+                     { 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 2, 1},
+                     { 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 2, 1},
+                     { 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1},
+                     { 1, 0, 2, 2, 2, 2, 2, 2, 0, 1, 1, 0, 0, 0, 1},
+                     { 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1},
+                     { 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1},
+                     { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1},
+                     { 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1},
+                     { 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1},
+                     { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                   };
+ALLEGRO_BITMAP *tileset = NULL;
 
 void DrawMap(){
 
-    bool angulo = false;
-    for(int i=0; i<HMAPA; i++){
+  for(int i=0; i<HMAPA; i++){
     for(int j=0; j<WMAPA; j++){
+      int x=mapa[i][j] % 3 * BLOCKSIZE;
+      int y=mapa[i][j] / 3 * BLOCKSIZE;
       int dx=j*BLOCKSIZE;
       int dy=i*BLOCKSIZE;
-        if(mapa[i][j] == 0){
-            al_draw_bitmap(chao,dx,dy,0);
-        }else if(mapa[i][j] == 2){
-            j == 0 ? al_draw_bitmap(parede,dx,dy,1) : al_draw_bitmap(parede,dx,dy,0);
-        }else if(mapa[i][j] == 3){
-            i == 0 ? al_draw_rotated_bitmap(parede,0,32,dx,dy,1.5708,1) : al_draw_rotated_bitmap(parede,0,0,dx,dy,4.71239,0);
-        }else if(mapa[i][j] == 4){
-            if(i == j && !angulo) {
-                    al_draw_bitmap(canto,dx,dy,0);
-            } else if(i < j && !angulo) {al_draw_bitmap(canto,dx,dy,1);
-                    angulo = true;}
-            else if(i > j) al_draw_bitmap(canto,dx,dy,ALLEGRO_FLIP_VERTICAL);
-            if(i == HMAPA-1 &&  WMAPA-1 == j && angulo) al_draw_bitmap(canto,dx,dy,ALLEGRO_FLIP_HORIZONTAL + ALLEGRO_FLIP_VERTICAL);
+
+      al_draw_bitmap_region(tileset,x,y,BLOCKSIZE,BLOCKSIZE,dx,dy,0);
 
     }
   }
-}
 }
 bool colide(int x, int y){
    int dx=x/BLOCKSIZE;
@@ -138,6 +47,7 @@ bool colide(int x, int y){
    int dx1=(x+25)/BLOCKSIZE;
    int dy1=(y+25)/BLOCKSIZE;
 
+   printf(" %d %d %d %d \n", dx, dy, dx1, dy1);
 
    if (mapa[dy][dx]==1 || mapa[dy][dx1]==1
        || mapa[dy1][dx]==1 || mapa[dy1][dx1]==1)
@@ -186,9 +96,7 @@ int main(){
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_keyboard_event_source());
 
-    chao = al_load_bitmap("./bitmap/chao.png");
-    parede = al_load_bitmap("./bitmap/parede.png");
-    canto = al_load_bitmap("./bitmap/canto.png");
+    tileset = al_load_bitmap("tileset.jpg");
 
     ALLEGRO_BITMAP *player2 = al_load_bitmap("Fantasma.png");
     ALLEGRO_BITMAP *player = al_load_bitmap("pacman.png");
@@ -282,7 +190,7 @@ int main(){
         posX2 += keys2[D] * 2;
 
         if (redesenha) {
-          DrawMap();
+          DrawMap(mapa);
 
           al_draw_bitmap(player, posX, posY, 0);
           if (mostraFantasma){
