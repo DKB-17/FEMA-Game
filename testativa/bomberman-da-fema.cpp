@@ -27,6 +27,8 @@ int main(){
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
     al_start_timer(timer);
 
+    // altura = 384 / 4 = 96
+    // comprimento = 256 / 4 = 64
     ALLEGRO_BITMAP *person1 = al_load_bitmap("./personagem/personagem1.png");
 
     while(true){
@@ -37,7 +39,7 @@ int main(){
         }
 
         al_clear_to_color(al_map_rgb(255,255,255));
-        al_draw_bitmap(person1,0,0,0);
+        al_draw_bitmap_region(person1,0,0,64,96,0,0,0);
         al_flip_display();
     }
 
