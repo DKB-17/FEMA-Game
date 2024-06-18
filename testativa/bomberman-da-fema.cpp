@@ -4,7 +4,26 @@
 #include <allegro_image.h>
 #include <keyboard.h>
 
+#define BLOCO 32
+#define WMAPA 50
+#define HMAPA 11
+
+
 using namespace std;
+
+
+int mapa[WMAPA][HMAPA] = {}
+
+ALLEGRO_BITMAP *piso = NULL;
+
+DrawMap(){
+    for(int i=0;i<HMAPA;i++){
+        for(int j=0;j<WMAPA;j++){
+
+        }
+    }
+}
+
 
 int main(){
 
@@ -15,7 +34,7 @@ int main(){
 
     //ALLEGRO_BITMAP* iconePage = al_load_bitmap("");
 
-    ALLEGRO_DISPLAY *display = al_create_display(1280,720);
+    ALLEGRO_DISPLAY *display = al_create_display(WMAPA*BLOCO,HMAPA*BLOCO);
     al_set_window_position(display, 0,50);
     al_set_window_title(display, "BritoMen");
     //al_set_display_icon(display, iconePage);
