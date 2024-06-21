@@ -112,7 +112,6 @@ void DesenharArvore() {
     }
 }
 
-
 int main(){
 
     al_init();
@@ -130,7 +129,7 @@ int main(){
     //al_set_display_icon(display, iconePage);
 
     ALLEGRO_FONT* font = al_create_builtin_font();
-    ALLEGRO_TIMER* timer = al_create_timer(1.0/60.0);
+    ALLEGRO_TIMER* timer = al_create_timer(1.0/30.0);
 
     ALLEGRO_EVENT_QUEUE* event_queue = al_create_event_queue();
     al_register_event_source(event_queue, al_get_display_event_source(display));
@@ -138,23 +137,24 @@ int main(){
     al_register_event_source(event_queue, al_get_keyboard_event_source());
     al_start_timer(timer);
 
-    // altura = 32
-    // comprimento = 32
-    ALLEGRO_BITMAP *person1 = al_load_bitmap("./personagem/py1 - Bomberman.png");
-    float frame1 = 0.f;
-    int current_frame_x1 = 0;
-    int current_frame_y1 = 0;
-    int inverte = 0;
+    // altura = 2280 / 4 = 570
+    // largura = 3963 / 7 = 566
+    ALLEGRO_BITMAP *britoman = al_load_bitmap("./personagem/britoman.png");
+    int altura1 = 570;
+    int largura1 = 566;
+    float frame1 = 0;
+    int current_frame_y1 = 3;
     int pos_x1 = 0;
     int pos_y1 = 0;
 
-    // altura = 384 / 4 = 96
-    // comprimento = 256 / 4 = 64
-    ALLEGRO_BITMAP *person2 = al_load_bitmap("./personagem/personagem1.png");
-    float frame2 = 0.f;
-    int current_frame_x2 = 0;
-    int current_frame_y2 = 96;
-    int pos_x2 = 1280-64;
+    // altura = 2280 / 4 = 570
+    // largura = 3963 / 7 = 566
+    ALLEGRO_BITMAP *almirman = al_load_bitmap("./personagem/almirman.png");
+    int altura2 = 570;
+    int largura2 = 566;
+    float frame2 = 0;
+    int current_frame_y2 = 3;
+    int pos_x2 = WMAPA - 1;
     int pos_y2 = 0;
 
     piso = al_load_bitmap("../bitmap/piso.png");
@@ -175,62 +175,100 @@ int main(){
         ALLEGRO_EVENT event;
         al_wait_for_event(event_queue, &event);
 
-        if(frame1 > 3){
-            frame1 -= 3;
+        if(frame1 > 7){
+            frame1 -= 7;
+        }
+        if(frame2 > 7){
+            frame2 -= 7;
         }
 
         if(event.type == ALLEGRO_EVENT_DISPLAY_CLOSE){
             break;
         }else if(event.keyboard.keycode == ALLEGRO_KEY_D){
-            current_frame_x1 = 32 * 2 + 2;
-            current_frame_y1 = 32 * 1 + 1;
-            inverte = 0;
-            frame1 += 0.3f;
-            pos_x1 += 20;
+            current_frame_y1 = 1;
+            if(pos_x1 < WMAPA){
+                pos_x1 += 1;
+                if(mapa[pos_y1][pos_x1] == 3 || mapa[pos_y1][pos_x1] == 4 || mapa[pos_y1][pos_x1] == 5){
+                    pos_x1 -= 1;
+                }
+            }
         }else if(event.keyboard.keycode == ALLEGRO_KEY_A){
-            current_frame_x1 = 32 * 2 + 2;
-            current_frame_y1 = 32 * 1 + 1;
-            inverte = 1;
-            frame1 += 0.3f;
-            pos_x1 -= 20;
+            current_frame_y1 = 3;
+            if(pos_x1 > 0){
+                pos_x1 -= 1;
+                if(mapa[pos_y1][pos_x1] == 3 || mapa[pos_y1][pos_x1] == 4 || mapa[pos_y1][pos_x1] == 5){
+                    pos_x1 += 1;
+                }
+            }
         }else if(event.keyboard.keycode == ALLEGRO_KEY_S){
-            current_frame_x1 = 32 * 2 + 2;
-            current_frame_y1 = 32 * 0 + 0;
-            frame1 += 0.3f;
-            pos_y1 += 20;
+            current_frame_y1 = 2;
+            if(pos_y1 < HMAPA){
+                pos_y1 += 1;
+                if(mapa[pos_y1][pos_x1] == 3 || mapa[pos_y1][pos_x1] == 4 || mapa[pos_y1][pos_x1] == 5){
+                    pos_y1 -= 1;
+                }
+            }
         }else if(event.keyboard.keycode == ALLEGRO_KEY_W){
-            current_frame_x1 = 32 * 2 + 2;
-            current_frame_y1 = 32 * 2 + 2;
-            frame1 += 0.3f;
-            pos_y1 -= 20;
+            current_frame_y1 = 0;
+            if(pos_y1 > 0){
+                pos_y1 -= 1;
+                if(mapa[pos_y1][pos_x1] == 3 || mapa[pos_y1][pos_x1] == 4 || mapa[pos_y1][pos_x1] == 5){
+                    pos_y1 += 1;
+                }
+            }
+        }
+
+        if(event.keyboard.keycode == ALLEGRO_EVENT_KEY_DOWN){
+            frame1 += 1;
+            frame2 += 1;
         }
 
         if(event.keyboard.keycode == ALLEGRO_KEY_RIGHT){
-            current_frame_y2 = 96 * 2;
-            pos_x2 += 20;
+            current_frame_y2 = 1;
+            if(pos_x2 < WMAPA){
+                pos_x2 += 1;
+                if(mapa[pos_y2][pos_x2] == 3 || mapa[pos_y2][pos_x2] == 4 || mapa[pos_y1][pos_x1] == 5){
+                    pos_x2 -= 1;
+                }
+            }
         }else if(event.keyboard.keycode == ALLEGRO_KEY_LEFT){
-            current_frame_y2 = 96 * 1;
-            pos_x2 -= 20;
+            current_frame_y2 = 3;
+            if(pos_x2 > 0){
+                pos_x2 -= 1;
+                if(mapa[pos_y2][pos_x2] == 3 || mapa[pos_y2][pos_x2] == 4 || mapa[pos_y1][pos_x1] == 5){
+                    pos_x2 += 1;
+                }
+            }
         }else if(event.keyboard.keycode == ALLEGRO_KEY_DOWN){
-            current_frame_y2 = 96 * 0;
-            pos_y2 += 20;
+            current_frame_y2 = 2;
+            if(pos_y2 < HMAPA){
+                pos_y2 += 1;
+                if(mapa[pos_y2][pos_x2] == 3 || mapa[pos_y2][pos_x2] == 4 || mapa[pos_y1][pos_x1] == 5){
+                    pos_y2 -= 1;
+                }
+            }
         }else if(event.keyboard.keycode == ALLEGRO_KEY_UP){
-            current_frame_y2 = 96 * 3;
-            pos_y2 -= 20;
+            current_frame_y2 = 0;
+            if(pos_y2 > 0){
+                pos_y2 -= 1;
+                if(mapa[pos_y2][pos_x2] == 3 || mapa[pos_y2][pos_x2] == 4 || mapa[pos_y1][pos_x1] == 5){
+                    pos_y2 += 1;
+                }
+            }
         }
 
         al_clear_to_color(al_map_rgb(255,255,255));
         DesenharMapa();
-        al_draw_bitmap_region(person1,current_frame_x1 * (int)frame1,current_frame_y1,32,32,pos_x1,pos_y1,inverte);
-        al_draw_bitmap_region(person2,64,current_frame_y2,64,96,pos_x2,pos_y2,0);
+        al_draw_scaled_bitmap(britoman,largura1*frame1,current_frame_y1*altura1,largura1,altura1,BLOCO*pos_x1,BLOCO*pos_y1,32,32,0);
+        al_draw_scaled_bitmap(almirman,largura2*frame2,current_frame_y2*altura2,largura2,altura2,BLOCO*pos_x2,BLOCO*pos_y2,32,32,0);
         DesenharArvore();
 
         al_flip_display();
 
     }
 
-    al_destroy_bitmap(person1);
-    al_destroy_bitmap(person2);
+    al_destroy_bitmap(britoman);
+    al_destroy_bitmap(almirman);
     al_destroy_font(font);
     al_destroy_display(display);
     al_destroy_event_queue(event_queue);
