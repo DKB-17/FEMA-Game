@@ -5,12 +5,18 @@
 #include <keyboard.h>
 #include <allegro_primitives.h>
 
+
 #define BLOCO 32
 #define WMAPA 50
 #define HMAPA 25
 
 
 using namespace std;
+
+struct personagem{
+
+
+};
 
 
 int mapa[HMAPA][WMAPA] = {
@@ -70,6 +76,7 @@ ALLEGRO_BITMAP *telhado = NULL;
 ALLEGRO_BITMAP *porta = NULL;
 ALLEGRO_BITMAP *portaDir = NULL;
 ALLEGRO_BITMAP *canto = NULL;
+ALLEGRO_BITMAP *prova = NULL;
 
 void DesenharMapa(){
     for(int i=0; i<HMAPA; i++){
@@ -171,6 +178,12 @@ int main(){
     canto = al_load_bitmap("../bitmap/canto.png");
 
 
+    prova = al_load_bitmap("./personagem/prova.png");
+    int pos_prova[2];
+    pos_prova[0] = 0;
+    pos_prova[1] = 0;
+
+
     while(true){
         ALLEGRO_EVENT event;
         al_wait_for_event(event_queue, &event);
@@ -259,16 +272,32 @@ int main(){
 
         al_clear_to_color(al_map_rgb(255,255,255));
         DesenharMapa();
+        if(mapa[pos_prova[0]][pos_prova[0]] == 3 || mapa[pos_prova[0]][pos_prova[0]] == 4 || mapa[pos_prova[0]][pos_prova[0]] == 5){
+                pos_prova[0] = rand() % WMAPA;
+                pos_prova[1] = rand() % HMAPA;
+
+        }else{
+            if(pos_prova[0] == pos_x1 && pos_prova[1] == pos_y1){
+                pos_prova[0] = rand() % WMAPA;
+                pos_prova[1] = rand() % HMAPA;
+            }else{
+                al_draw_bitmap(prova,pos_prova[0], pos_prova[1],0);
+            }
+        }
         al_draw_scaled_bitmap(britoman,largura1*frame1,current_frame_y1*altura1,largura1,altura1,BLOCO*pos_x1,BLOCO*pos_y1,32,32,0);
         al_draw_scaled_bitmap(almirman,largura2*frame2,current_frame_y2*altura2,largura2,altura2,BLOCO*pos_x2,BLOCO*pos_y2,32,32,0);
+
         DesenharArvore();
 
         al_flip_display();
+
+        cout << "\n" << pos_prova[0] << "|" << pos_prova[1];
 
     }
 
     al_destroy_bitmap(britoman);
     al_destroy_bitmap(almirman);
+    al_destroy_bitmap(prova);
     al_destroy_font(font);
     al_destroy_display(display);
     al_destroy_event_queue(event_queue);
