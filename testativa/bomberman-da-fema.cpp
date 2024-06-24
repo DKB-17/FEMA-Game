@@ -6,7 +6,7 @@
 #include <allegro_primitives.h>
 
 
-#define BLOCO 32
+#define BLOCO 25
 #define WMAPA 50
 #define HMAPA 25
 
@@ -42,7 +42,7 @@ int mapa[HMAPA][WMAPA] = {
 {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
 {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,10, 1, 1, 1, 1,10, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 2, 2, 2, 7, 2, 2, 2, 2, 2, 2, 2},
 {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 1, 1, 1, 1, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-{3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 1, 1, 1, 1, 4, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+{3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 1, 1, 1, 1,10, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
 {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 1, 1, 1, 1, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
 {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 1, 1, 1, 1, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 1, 2, 2, 2, 7, 2, 2, 2, 2, 2, 2, 2}
 };
@@ -127,16 +127,14 @@ int main(){
     al_install_keyboard();
     al_init_primitives_addon();
 
+    ALLEGRO_DISPLAY *display = al_create_display(WMAPA*(BLOCO),HMAPA*(BLOCO));
 
-    //ALLEGRO_BITMAP* iconePage = al_load_bitmap("");
-    ALLEGRO_DISPLAY *display = al_create_display(WMAPA*BLOCO,HMAPA*BLOCO);
-    al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
     al_set_window_position(display, 0,5);
     al_set_window_title(display, "BritoMen");
     //al_set_display_icon(display, iconePage);
 
     ALLEGRO_FONT* font = al_create_builtin_font();
-    ALLEGRO_TIMER* timer = al_create_timer(1.0/30.0);
+    ALLEGRO_TIMER* timer = al_create_timer(1.0/25.0);
 
     ALLEGRO_EVENT_QUEUE* event_queue = al_create_event_queue();
     al_register_event_source(event_queue, al_get_display_event_source(display));
@@ -182,9 +180,9 @@ int main(){
     int pos_prova[2];
     pos_prova[0] = 0;
     pos_prova[1] = 0;
+    bool rodando = true;
 
-
-    while(true){
+    while(rodando){
         ALLEGRO_EVENT event;
         al_wait_for_event(event_queue, &event);
 
@@ -197,11 +195,14 @@ int main(){
 
         if(event.type == ALLEGRO_EVENT_DISPLAY_CLOSE){
             break;
-        }else if(event.keyboard.keycode == ALLEGRO_KEY_D){
+        } else if(event.keyboard.keycode == ALLEGRO_KEY_ESCAPE){
+            rodando = false;
+        } else if(event.keyboard.keycode == ALLEGRO_KEY_D){
             current_frame_y1 = 1;
-            if(pos_x1 < WMAPA){
+            if(pos_x1 < WMAPA-1){
                 pos_x1 += 1;
-                if(mapa[pos_y1][pos_x1] == 3 || mapa[pos_y1][pos_x1] == 4 || mapa[pos_y1][pos_x1] == 5){
+                if(mapa[pos_y1][pos_x1] == 3 || mapa[pos_y1][pos_x1] == 4 || mapa[pos_y1][pos_x1] == 5
+                    || mapa[pos_y1][pos_x1] == 8 || mapa[pos_y1][pos_x1] == 9 || mapa[pos_y1][pos_x1] == 10){
                     pos_x1 -= 1;
                 }
             }
@@ -209,15 +210,17 @@ int main(){
             current_frame_y1 = 3;
             if(pos_x1 > 0){
                 pos_x1 -= 1;
-                if(mapa[pos_y1][pos_x1] == 3 || mapa[pos_y1][pos_x1] == 4 || mapa[pos_y1][pos_x1] == 5){
+                if(mapa[pos_y1][pos_x1] == 3 || mapa[pos_y1][pos_x1] == 4 || mapa[pos_y1][pos_x1] == 5
+                    || mapa[pos_y1][pos_x1] == 8 || mapa[pos_y1][pos_x1] == 9 || mapa[pos_y1][pos_x1] == 10){
                     pos_x1 += 1;
                 }
             }
         }else if(event.keyboard.keycode == ALLEGRO_KEY_S){
             current_frame_y1 = 2;
-            if(pos_y1 < HMAPA){
+            if(pos_y1 < HMAPA-1){
                 pos_y1 += 1;
-                if(mapa[pos_y1][pos_x1] == 3 || mapa[pos_y1][pos_x1] == 4 || mapa[pos_y1][pos_x1] == 5){
+                if(mapa[pos_y1][pos_x1] == 3 || mapa[pos_y1][pos_x1] == 4 || mapa[pos_y1][pos_x1] == 5
+                    || mapa[pos_y1][pos_x1] == 8 || mapa[pos_y1][pos_x1] == 9 || mapa[pos_y1][pos_x1] == 10){
                     pos_y1 -= 1;
                 }
             }
@@ -225,7 +228,8 @@ int main(){
             current_frame_y1 = 0;
             if(pos_y1 > 0){
                 pos_y1 -= 1;
-                if(mapa[pos_y1][pos_x1] == 3 || mapa[pos_y1][pos_x1] == 4 || mapa[pos_y1][pos_x1] == 5){
+                if(mapa[pos_y1][pos_x1] == 3 || mapa[pos_y1][pos_x1] == 4 || mapa[pos_y1][pos_x1] == 5
+                    || mapa[pos_y1][pos_x1] == 8 || mapa[pos_y1][pos_x1] == 9 || mapa[pos_y1][pos_x1] == 10){
                     pos_y1 += 1;
                 }
             }
@@ -238,9 +242,10 @@ int main(){
 
         if(event.keyboard.keycode == ALLEGRO_KEY_RIGHT){
             current_frame_y2 = 1;
-            if(pos_x2 < WMAPA){
+            if(pos_x2 < WMAPA-1){
                 pos_x2 += 1;
-                if(mapa[pos_y2][pos_x2] == 3 || mapa[pos_y2][pos_x2] == 4 || mapa[pos_y1][pos_x1] == 5){
+                if(mapa[pos_y2][pos_x2] == 3 || mapa[pos_y2][pos_x2] == 4 || mapa[pos_y2][pos_x2] == 5
+                    || mapa[pos_y2][pos_x2] == 8 || mapa[pos_y2][pos_x2] == 9 || mapa[pos_y2][pos_x2] == 10){
                     pos_x2 -= 1;
                 }
             }
@@ -248,15 +253,17 @@ int main(){
             current_frame_y2 = 3;
             if(pos_x2 > 0){
                 pos_x2 -= 1;
-                if(mapa[pos_y2][pos_x2] == 3 || mapa[pos_y2][pos_x2] == 4 || mapa[pos_y1][pos_x1] == 5){
+                if(mapa[pos_y2][pos_x2] == 3 || mapa[pos_y2][pos_x2] == 4 || mapa[pos_y2][pos_x2] == 5
+                    || mapa[pos_y2][pos_x2] == 8 || mapa[pos_y2][pos_x2] == 9 || mapa[pos_y2][pos_x2] == 10){
                     pos_x2 += 1;
                 }
             }
         }else if(event.keyboard.keycode == ALLEGRO_KEY_DOWN){
             current_frame_y2 = 2;
-            if(pos_y2 < HMAPA){
+            if(pos_y2 < HMAPA-1){
                 pos_y2 += 1;
-                if(mapa[pos_y2][pos_x2] == 3 || mapa[pos_y2][pos_x2] == 4 || mapa[pos_y1][pos_x1] == 5){
+                if(mapa[pos_y2][pos_x2] == 3 || mapa[pos_y2][pos_x2] == 4 || mapa[pos_y2][pos_x2] == 5
+                    || mapa[pos_y2][pos_x2] == 8 || mapa[pos_y2][pos_x2] == 9 || mapa[pos_y2][pos_x2] == 10){
                     pos_y2 -= 1;
                 }
             }
@@ -264,7 +271,8 @@ int main(){
             current_frame_y2 = 0;
             if(pos_y2 > 0){
                 pos_y2 -= 1;
-                if(mapa[pos_y2][pos_x2] == 3 || mapa[pos_y2][pos_x2] == 4 || mapa[pos_y1][pos_x1] == 5){
+                if(mapa[pos_y2][pos_x2] == 3 || mapa[pos_y2][pos_x2] == 4 || mapa[pos_y2][pos_x2] == 5
+                    || mapa[pos_y2][pos_x2] == 8 || mapa[pos_y2][pos_x2] == 9 || mapa[pos_y2][pos_x2] == 10){
                     pos_y2 += 1;
                 }
             }
@@ -272,25 +280,29 @@ int main(){
 
         al_clear_to_color(al_map_rgb(255,255,255));
         DesenharMapa();
-        if(mapa[pos_prova[0]][pos_prova[0]] == 3 || mapa[pos_prova[0]][pos_prova[0]] == 4 || mapa[pos_prova[0]][pos_prova[0]] == 5){
-                pos_prova[0] = rand() % WMAPA;
-                pos_prova[1] = rand() % HMAPA;
 
-        }else{
-            if(pos_prova[0] == pos_x1 && pos_prova[1] == pos_y1){
-                pos_prova[0] = rand() % WMAPA;
-                pos_prova[1] = rand() % HMAPA;
-            }else{
-                al_draw_bitmap(prova,pos_prova[0], pos_prova[1],0);
-            }
-        }
-        al_draw_scaled_bitmap(britoman,largura1*frame1,current_frame_y1*altura1,largura1,altura1,BLOCO*pos_x1,BLOCO*pos_y1,32,32,0);
-        al_draw_scaled_bitmap(almirman,largura2*frame2,current_frame_y2*altura2,largura2,altura2,BLOCO*pos_x2,BLOCO*pos_y2,32,32,0);
+        al_draw_scaled_bitmap(britoman,largura1*frame1,current_frame_y1*altura1,largura1,altura1,BLOCO*pos_x1,BLOCO*pos_y1,BLOCO,BLOCO,0);
+        al_draw_scaled_bitmap(almirman,largura2*frame2,current_frame_y2*altura2,largura2,altura2,BLOCO*pos_x2,BLOCO*pos_y2,BLOCO,BLOCO,0);
 
         DesenharArvore();
+        if(mapa[pos_prova[1]][pos_prova[0]] == 3
+           || mapa[pos_prova[1]][pos_prova[0]] == 4
+           || mapa[pos_prova[1]][pos_prova[0]] == 5
+           || mapa[pos_prova[1]][pos_prova[0]] == 8
+           || mapa[pos_prova[1]][pos_prova[0]] == 9
+           || mapa[pos_prova[1]][pos_prova[0]] == 10){
+                pos_prova[0] = rand() % WMAPA;
+                pos_prova[1] = rand() % HMAPA;
 
+        }
+        if(pos_prova[0] == pos_x1 && pos_prova[1] == pos_y1 || pos_prova[0] == pos_x2 && pos_prova[1] == pos_y2){
+            pos_prova[0] = rand() % WMAPA;
+            pos_prova[1] = rand() % HMAPA;
+        }else{
+            al_draw_bitmap(prova,pos_prova[0]*BLOCO-2, pos_prova[1]*BLOCO-2,0);
+        }
+        al_hide_mouse_cursor(display);
         al_flip_display();
-
         cout << "\n" << pos_prova[0] << "|" << pos_prova[1];
 
     }
