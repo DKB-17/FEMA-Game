@@ -303,7 +303,6 @@ int main(){
         }
         al_hide_mouse_cursor(display);
         al_flip_display();
-        cout << "\n" << pos_prova[0] << "|" << pos_prova[1];
 
     }
 
